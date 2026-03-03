@@ -34,26 +34,10 @@ login_manager.login_message = "Veuillez vous connecter pour accéder à cette pa
 login_manager.login_message_category = "warning"
 
 # Faire User compatible avec Flask-Login
-class UserLogin(User):
-    @property
-    def is_authenticated(self):
-        return True
-    
-    @property
-    def is_active(self):
-        return self.is_active
-    
-    @property
-    def is_anonymous(self):
-        return False
-    
-    def get_id(self):
-        return str(self.id)
-
 User.is_authenticated = property(lambda self: True)
-User.is_active = property(lambda self: self.is_active)
 User.is_anonymous = property(lambda self: False)
 User.get_id = lambda self: str(self.id)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -88,9 +72,14 @@ def index():
 
 # Page d'envoi
 @app.route('/send', methods=['GET', 'POST'])
-@login_required
 def send_notification():
     """Envoyer une notification"""
+    # Vérifier l'authentification (Flask-Login ou session fallback)
+    is_authenticated = (current_user and getattr(current_user, 'is_authenticated', False)) or session.get('username')
+    if not is_authenticated:
+        flash('Veuillez vous connecter pour envoyer une notification.', 'warning')
+        return redirect(url_for('login'))
+    
     if is_student_user():
         flash('Accès refusé : les étudiants ne peuvent pas envoyer de notifications.', 'warning')
         return redirect(url_for('index'))
@@ -187,9 +176,14 @@ def send_notification():
 
 # Dashboard
 @app.route('/dashboard')
-@login_required
 def dashboard():
     """Dashboard avec statistiques"""
+    # Vérifier l'authentification (Flask-Login ou session fallback)
+    is_authenticated = (current_user and getattr(current_user, 'is_authenticated', False)) or session.get('username')
+    if not is_authenticated:
+        flash('Veuillez vous connecter pour accéder au dashboard.', 'warning')
+        return redirect(url_for('login'))
+    
     if is_student_user():
         flash('Accès refusé : les étudiants n\'ont pas accès au dashboard.', 'warning')
         return redirect(url_for('index'))

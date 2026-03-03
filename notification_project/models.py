@@ -49,7 +49,7 @@ class Notification(db.Model):
     alert_type = db.Column(db.String(50), nullable=False)  # SECURITY, WEATHER, HEALTH, ACADEMIC
     priority = db.Column(db.String(20), default='MEDIUM')  # URGENT, HIGH, MEDIUM, LOW
     status = db.Column(db.String(20), default='PENDING')  # PENDING, SENT, FAILED
-    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     sent_at = db.Column(db.DateTime)
     icon = db.Column(db.String(50))

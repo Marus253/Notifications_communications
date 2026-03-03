@@ -44,7 +44,7 @@ def init_database():
             username='etudiant',
             email='etudiant@upc.edu',
             full_name='Étudiant Test',
-            role='user',
+            role='student',
             phone='+33687654321',
             is_active=True
         )
