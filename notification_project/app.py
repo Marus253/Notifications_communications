@@ -150,6 +150,30 @@ def send_notification():
                 'timestamp': datetime.now().strftime('%H:%M:%S'),
                 'result': result
             })
+
+            # --- Persist to DB: create Notification and link to all students ---
+            try:
+                notif_title = f"{alert_type} - {priority}"
+                new_notif = Notification(
+                    title=notif_title,
+                    message=message,
+                    alert_type=alert_type,
+                    priority=priority,
+                    status='SENT',
+                    created_by_id=(current_user.id if (current_user and getattr(current_user, 'is_authenticated', False)) else None),
+                )
+                db.session.add(new_notif)
+                db.session.commit()
+
+                # Find all student users and create UserNotification entries
+                students = User.query.filter_by(role='student').all()
+                for stud in students:
+                    user_notif = DBUserNotification(user_id=stud.id, notification_id=new_notif.id, read=False)
+                    db.session.add(user_notif)
+                db.session.commit()
+            except Exception as e:
+                # Log but don't break the flow
+                print('Erreur lors de la sauvegarde en base:', e)
             
             flash(f'{icon} Notification envoyée avec succès!', 'success')
             
