@@ -66,6 +66,18 @@ users = {
     'etudiant': {'password': 'etu123', 'name': 'Étudiant Test'}
 }
 
+def is_student_user():
+    """Retourne True si l'utilisateur courant est un étudiant (Flask-Login ou session fallback)."""
+    try:
+        if current_user and getattr(current_user, 'is_authenticated', False):
+            return getattr(current_user, 'role', None) == 'student'
+    except Exception:
+        pass
+    # Fallback session username
+    if session.get('username') == 'etudiant':
+        return True
+    return False
+
 # Page d'accueil
 @app.route('/')
 def index():
@@ -76,8 +88,12 @@ def index():
 
 # Page d'envoi
 @app.route('/send', methods=['GET', 'POST'])
+@login_required
 def send_notification():
     """Envoyer une notification"""
+    if is_student_user():
+        flash('Accès refusé : les étudiants ne peuvent pas envoyer de notifications.', 'warning')
+        return redirect(url_for('index'))
     
     if request.method == 'POST':
         alert_type = request.form.get('alert_type')
@@ -147,8 +163,12 @@ def send_notification():
 
 # Dashboard
 @app.route('/dashboard')
+@login_required
 def dashboard():
     """Dashboard avec statistiques"""
+    if is_student_user():
+        flash('Accès refusé : les étudiants n\'ont pas accès au dashboard.', 'warning')
+        return redirect(url_for('index'))
     
     # Calcule les statistiques
     stats = {
@@ -175,6 +195,41 @@ def dashboard():
                          stats=stats,
                          mro=mro_list,
                          notifications=notifications_history[-10:])
+
+
+# Boîte de réception personnelle
+@app.route('/my-notifications')
+def my_notifications():
+    """Affiche les notifications reçues par l'utilisateur connecté."""
+    # Si l'utilisateur est connecté via la base de données
+    try:
+        if current_user and getattr(current_user, 'is_authenticated', False):
+            # Utiliser le modèle DBUserNotification (liaison user_notifications)
+            user_notifs = DBUserNotification.query.filter_by(user_id=current_user.id).order_by(DBUserNotification.received_at.desc()).all()
+            # Construire une liste affichable
+            items = []
+            for un in user_notifs:
+                notif = un.notification
+                items.append({
+                    'type': notif.alert_type if notif else 'N/A',
+                    'message': notif.message if notif else getattr(un, 'message', '—'),
+                    'priority': notif.priority if notif else 'MEDIUM',
+                    'timestamp': un.received_at.strftime('%Y-%m-%d %H:%M:%S') if un.received_at else '',
+                    'read': un.read
+                })
+            return render_template('my_notifications.html', notifications=items)
+    except Exception:
+        # cas fallback + session
+        pass
+
+    # Fallback: si session 'etudiant' présent, afficher l'historique global (démo)
+    if session.get('username') == 'etudiant':
+        items = list(reversed(notifications_history))
+        return render_template('my_notifications.html', notifications=items)
+
+    # Sinon rediriger
+    flash('Aucune boîte aux lettres disponible pour cet utilisateur.', 'warning')
+    return redirect(url_for('index'))
 
 # Page de démonstration POO
 @app.route('/demo-poo')
