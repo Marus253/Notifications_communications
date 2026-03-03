@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Notification System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h3>📊 Dashboard des notifications</h3>
+            </div>
+            <div class="card-body">
+                <h5>Statistiques :</h5>
+                
+                <div class="row text-center mt-4">
+                    <div class="col-md-2">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h1 class="display-4">{{ stats.total }}</h1>
+                                <p>Total</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h1 class="display-4">{{ stats.security }}</h1>
+                                <p>Sécurité</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h1 class="display-4">{{ stats.weather }}</h1>
+                                <p>Météo</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h1 class="display-4">{{ stats.health }}</h1>
+                                <p>Santé</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h1 class="display-4">{{ stats.academic }}</h1>
+                                <p>Académique</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="/send" class="btn btn-primary">Nouvelle notification</a>
+                    <a href="/" class="btn btn-secondary">Retour à l'accueil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

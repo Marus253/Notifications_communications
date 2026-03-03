@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Envoyer une notification{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3> Envoyer une notification</h3>
+            </div>
+            <div class="card-body">
+                <!-- Formulaire simple -->
+                <form action="/send" method="POST">
+                    <div class="mb-3">
+                        <label for="alert_type" class="form-label">Type d'alerte</label>
+                        <select class="form-select" id="alert_type" name="alert_type" required>
+                            <option value="SECURITY">🚨 Sécurité (URGENT)</option>
+                            <option value="WEATHER">🌧️ Météo (MOYENNE)</option>
+                            <option value="HEALTH">🏥 Santé (HAUTE)</option>
+                            <option value="ACADEMIC">📚 Académique (BASSE)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" name="message" rows="3" 
+                                  placeholder="Entrez votre message ici..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                    <a href="/" class="btn btn-secondary">Annuler</a>
+                </form>
+                
+                <!-- Si on a un résultat à afficher -->
+                {% if result %}
+                <div class="alert alert-info mt-3">
+                    <h5>Résultat :</h5>
+                    <p>{{ result }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

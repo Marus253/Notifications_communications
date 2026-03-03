@@ -1,0 +1,131 @@
+/* ===== SPÉCIFIQUE DASHBOARD ===== */
+
+/* Graphiques */
+.chart-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.chart-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* MRO Display */
+.mro-container {
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 5px solid var(--secondary-color);
+}
+
+.mro-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.mro-item:last-child {
+    border-bottom: none;
+}
+
+.mro-item-index {
+    display: inline-block;
+    width: 30px;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--secondary-color);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px var(--secondary-color);
+}
+
+.timeline-time {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-content {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Cards Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Progress bars */
+.progress-custom {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    margin-bottom: 1rem;
+}
+
+.progress-bar-custom {
+    border-radius: 5px;
+    transition: width 1s ease-in-out;
+}
+
+/* Loading animation */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

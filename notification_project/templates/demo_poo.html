@@ -1,0 +1,645 @@
+{% extends "base.html" %}
+
+{% block title %}Démonstration POO - Concepts Avancés{% endblock %}
+
+{% block head %}
+<style>
+    /* Styles spécifiques à la page demo POO */
+    .concept-section {
+        border-left: 4px solid;
+        padding-left: 1.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .concept-section:hover {
+        transform: translateX(5px);
+    }
+    
+    .code-block {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+    }
+    
+    .mro-display {
+        background: #34495e;
+        color: #bdc3c7;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        line-height: 1.6;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .mro-item {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #4a6572;
+    }
+    
+    .mro-item:last-child {
+        border-bottom: none;
+    }
+    
+    .mro-index {
+        color: #3498db;
+        font-weight: bold;
+        display: inline-block;
+        width: 30px;
+    }
+    
+    .test-button {
+        margin-top: 1rem;
+    }
+    
+    .result-box {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .concept-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        margin-right: 0.5rem;
+        border-radius: 4px;
+    }
+    
+    .diagram-container {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        margin: 1rem 0;
+    }
+    
+    .diagram {
+        font-family: monospace;
+        font-size: 0.8rem;
+        line-height: 1.8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- En-tête -->
+        <div class="card card-custom mb-4">
+            <div class="card-header card-header-custom" style="background: linear-gradient(135deg, #2c3e50, #3498db);">
+                <h3 class="mb-0">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Démonstration des Concepts POO Avancés
+                </h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Cette page illustre tous les concepts de Programmation Orientée Objet avancés implémentés dans le projet.
+                    Cliquez sur les boutons "Tester" pour voir chaque concept en action dans la console.
+                </p>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-terminal me-2"></i>
+                    <strong>Important :</strong> Ouvrez la console du navigateur (F12 → Console) pour voir les résultats des tests.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Diagramme d'architecture -->
+        <div class="card card-custom mb-4">
+            <div class="card-header card-header-custom" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <h5 class="mb-0">
+                    <i class="fas fa-sitemap me-2"></i>
+                    Architecture du Projet
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="diagram-container">
+                    <div class="diagram">
+                        <strong>📁 notification_flask/</strong><br>
+                        │<br>
+                        ├── <strong>📁 core/</strong> <span class="text-muted"># Cœur POO</span><br>
+                        │   ├── mixins.py <span class="text-muted"># SMSMixin, EmailMixin, PushMixin</span><br>
+                        │   ├── decorators.py <span class="text-muted"># log_notification, priority, retry_on_failure</span><br>
+                        │   ├── notifiers.py <span class="text-muted"># EmergencyNotifier (MRO)</span><br>
+                        │   ├── alert_types.py <span class="text-muted"># 4 types d'alerte</span><br>
+                        │   └── advanced.py <span class="text-muted"># Descripteurs, Métaclasse</span><br>
+                        │<br>
+                        ├── <strong>app.py</strong> <span class="text-muted"># Application Flask</span><br>
+                        ├── <strong>📁 templates/</strong> <span class="text-muted"># Pages HTML</span><br>
+                        └── <strong>📁 static/</strong> <span class="text-muted"># CSS, JS</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Colonne gauche : Concepts -->
+    <div class="col-lg-8">
+        <!-- 1. MIXINS -->
+        <div class="concept-section" style="border-left-color: #3498db;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>
+                    <i class="fas fa-puzzle-piece text-primary me-2"></i>
+                    1. Les Mixins
+                </h4>
+                <span class="badge bg-primary concept-badge">Composition</span>
+            </div>
+            
+            <p class="text-muted">
+                <strong>Définition :</strong> Classes conçues pour être combinées avec d'autres classes, pas utilisées seules.
+                Elles ajoutent des fonctionnalités spécifiques (SMS, Email, Push) sans créer de hiérarchie complexe.
+            </p>
+            
+            <div class="code-block">
+# core/mixins.py<br>
+class SMSMixin:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def send_sms(self, message):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"[SMS] {message}")<br>
+<br>
+class EmailMixin:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def send_email(self, message):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"[EMAIL] {message}")<br>
+<br>
+# Utilisation :<br>
+class SecurityAlert(SMSMixin, EmailMixin, PushMixin):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pass  # Hérite des 3 fonctionnalités
+            </div>
+            
+            <button class="btn btn-primary test-button" onclick="testMixins()">
+                <i class="fas fa-play me-1"></i> Tester les Mixins
+            </button>
+            
+            <div id="mixins-result" class="result-box" style="display: none;">
+                <!-- Les résultats apparaîtront ici -->
+            </div>
+        </div>
+
+        <!-- 2. HÉRITAGE MULTIPLE + MRO -->
+        <div class="concept-section" style="border-left-color: #27ae60;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>
+                    <i class="fas fa-sitemap text-success me-2"></i>
+                    2. Héritage Multiple & MRO
+                </h4>
+                <span class="badge bg-success concept-badge">MRO</span>
+            </div>
+            
+            <p class="text-muted">
+                <strong>Définition :</strong> Une classe peut hériter de plusieurs parents. Le MRO (Method Resolution Order) 
+                détermine l'ordre dans lequel Python recherche les méthodes.
+            </p>
+            
+            <div class="code-block">
+# core/notifiers.py<br>
+class EmergencyNotifier(SecurityMixin, WeatherMixin,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HealthMixin, AcademicMixin):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+<br>
+# Afficher le MRO :<br>
+print(EmergencyNotifier.__mro__)
+            </div>
+            
+            <div class="mro-display mb-3">
+                <div id="mro-display">
+                    <!-- Le MRO sera affiché ici -->
+                </div>
+            </div>
+            
+            <button class="btn btn-success test-button" onclick="testMRO()">
+                <i class="fas fa-play me-1"></i> Tester le MRO
+            </button>
+            
+            <div id="mro-result" class="result-box" style="display: none;"></div>
+        </div>
+
+        <!-- 3. DÉCORATEURS -->
+        <div class="concept-section" style="border-left-color: #f39c12;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>
+                    <i class="fas fa-star text-warning me-2"></i>
+                    3. Les Décorateurs (avec *args, **kwargs)
+                </h4>
+                <span class="badge bg-warning concept-badge">@decorator</span>
+            </div>
+            
+            <p class="text-muted">
+                <strong>Définition :</strong> Fonctions qui modifient le comportement d'autres fonctions. 
+                <code>*args</code> et <code>**kwargs</code> permettent d'accepter n'importe quels arguments.
+            </p>
+            
+            <div class="code-block">
+# core/decorators.py<br>
+def log_notification(func):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def wrapper(*args, **kwargs):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"[LOG] Appel de {func.__name__}")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return func(*args, **kwargs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return wrapper<br>
+<br>
+@log_notification<br>
+def send_notification(message):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(f"Envoi: {message}")
+            </div>
+            
+            <button class="btn btn-warning test-button" onclick="testDecorators()">
+                <i class="fas fa-play me-1"></i> Tester les Décorateurs
+            </button>
+            
+            <div id="decorators-result" class="result-box" style="display: none;"></div>
+        </div>
+
+        <!-- 4. DESCRIPTEURS -->
+        <div class="concept-section" style="border-left-color: #e74c3c;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>
+                    <i class="fas fa-check-circle text-danger me-2"></i>
+                    4. Les Descripteurs
+                </h4>
+                <span class="badge bg-danger concept-badge">__get__, __set__</span>
+            </div>
+            
+            <p class="text-muted">
+                <strong>Définition :</strong> Objets qui contrôlent l'accès aux attributs. Permettent une validation 
+                automatique lors de l'affectation de valeurs (emails, priorités, etc.).
+            </p>
+            
+            <div class="code-block">
+# core/advanced.py<br>
+class PriorityDescriptor:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def __set__(self, obj, value):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Validation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if value not in ["LOW", "MEDIUM", "HIGH", "URGENT"]:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise ValueError("Priorité invalide")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.data[id(obj)] = value<br>
+<br>
+class Notification:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;priority = PriorityDescriptor()  # Validation automatique
+            </div>
+            
+            <button class="btn btn-danger test-button" onclick="testDescriptors()">
+                <i class="fas fa-play me-1"></i> Tester les Descripteurs
+            </button>
+            
+            <div id="descriptors-result" class="result-box" style="display: none;"></div>
+        </div>
+
+        <!-- 5. MÉTACLASSE -->
+        <div class="concept-section" style="border-left-color: #9b59b6;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4>
+                    <i class="fas fa-magic text-purple me-2"></i>
+                    5. Les Métaclasses
+                </h4>
+                <span class="badge bg-purple concept-badge">type</span>
+            </div>
+            
+            <p class="text-muted">
+                <strong>Définition :</strong> Les "classes de classes". Contrôlent la création des classes elles-mêmes. 
+                Permettent d'ajouter automatiquement des méthodes, de la documentation, etc.
+            </p>
+            
+            <div class="code-block">
+# core/advanced.py<br>
+class NotificationMeta(type):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def __new__(cls, name, bases, attrs):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Enregistrement automatique<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cls.registry[name] = new_class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return super().__new__(cls, name, bases, attrs)<br>
+<br>
+class BaseNotification(metaclass=NotificationMeta):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pass  # Enregistrée automatiquement
+            </div>
+            
+            <button class="btn btn-purple test-button" style="background-color: #9b59b6; color: white;" onclick="testMetaclass()">
+                <i class="fas fa-play me-1"></i> Tester la Métaclasse
+            </button>
+            
+            <div id="metaclass-result" class="result-box" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Colonne droite : Résumé et Tests -->
+    <div class="col-lg-4">
+        <!-- Résumé des concepts -->
+        <div class="card card-custom mb-4">
+            <div class="card-header card-header-custom" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
+                <h5 class="mb-0">
+                    <i class="fas fa-list-check me-2"></i>
+                    Concepts Implémentés
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-primary"></i>
+                        </div>
+                        <div>
+                            <strong>Mixins</strong>
+                            <p class="mb-0 small text-muted">SMSMixin, EmailMixin, PushMixin</p>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        <div>
+                            <strong>Héritage Multiple</strong>
+                            <p class="mb-0 small text-muted">4 types d'urgence combinés</p>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-warning"></i>
+                        </div>
+                        <div>
+                            <strong>Décorateurs</strong>
+                            <p class="mb-0 small text-muted">Avec *args et **kwargs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-danger"></i>
+                        </div>
+                        <div>
+                            <strong>Descripteurs</strong>
+                            <p class="mb-0 small text-muted">Validation automatique</p>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-purple"></i>
+                        </div>
+                        <div>
+                            <strong>Métaclasse</strong>
+                            <p class="mb-0 small text-muted">Enregistrement automatique</p>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group-item d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-info"></i>
+                        </div>
+                        <div>
+                            <strong>Application Web</strong>
+                            <p class="mb-0 small text-muted">Flask + Interface complète</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test complet -->
+        <div class="card card-custom mb-4">
+            <div class="card-header card-header-custom" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Test Complet
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    Teste tous les concepts en une seule fois. Envoie une alerte de sécurité qui utilise :
+                </p>
+                <ul class="small text-muted">
+                    <li>Les 3 mixins (SMS, Email, Push)</li>
+                    <li>Les décorateurs (log, priority)</li>
+                    <li>L'héritage multiple</li>
+                    <li>La validation par descripteur</li>
+                </ul>
+                
+                <button class="btn btn-danger w-100 test-button" onclick="testComplete()">
+                    <i class="fas fa-rocket me-1"></i> Lancer le Test Complet
+                </button>
+                
+                <div id="complete-result" class="result-box mt-3" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Console de sortie -->
+        <div class="card card-custom">
+            <div class="card-header card-header-custom" style="background: linear-gradient(135deg, #7f8c8d, #95a5a6);">
+                <h5 class="mb-0">
+                    <i class="fas fa-terminal me-2"></i>
+                    Console de Sortie
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="console-output" class="result-box" style="height: 300px;">
+                    <div class="text-muted text-center py-5">
+                        <i class="fas fa-code fa-2x mb-3"></i><br>
+                        Les résultats des tests apparaîtront ici
+                    </div>
+                </div>
+                
+                <button class="btn btn-outline-secondary btn-sm mt-2 w-100" onclick="clearConsole()">
+                    <i class="fas fa-eraser me-1"></i> Effacer la console
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ===== FONCTIONS DE TEST =====
+
+let consoleOutput = document.getElementById('console-output');
+
+function logToConsole(message, type = 'info') {
+    const timestamp = new Date().toLocaleTimeString();
+    const color = {
+        'info': '#3498db',
+        'success': '#27ae60',
+        'warning': '#f39c12',
+        'error': '#e74c3c',
+        'system': '#9b59b6'
+    }[type] || '#3498db';
+    
+    const entry = document.createElement('div');
+    entry.innerHTML = `
+        <small style="color: #7f8c8d">[${timestamp}]</small>
+        <span style="color: ${color}">${message}</span>
+    `;
+    entry.style.borderBottom = '1px solid #eee';
+    entry.style.padding = '0.25rem 0';
+    
+    consoleOutput.appendChild(entry);
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    
+    // Affiche aussi dans la console du navigateur
+    console.log(`[${type.toUpperCase()}] ${message}`);
+}
+
+function clearConsole() {
+    consoleOutput.innerHTML = `
+        <div class="text-muted text-center py-5">
+            <i class="fas fa-code fa-2x mb-3"></i><br>
+            Les résultats des tests apparaîtront ici
+        </div>
+    `;
+}
+
+function showResult(elementId, content) {
+    const element = document.getElementById(elementId);
+    element.innerHTML = content;
+    element.style.display = 'block';
+}
+
+// 1. Test des Mixins
+function testMixins() {
+    logToConsole('🧪 Début du test des Mixins...', 'info');
+    
+    fetch('/api/test-mixins')
+        .then(response => response.json())
+        .then(data => {
+            let result = '';
+            data.steps.forEach(step => {
+                result += `✓ ${step}\n`;
+            });
+            showResult('mixins-result', result);
+            logToConsole('✅ Test des Mixins réussi!', 'success');
+        })
+        .catch(error => {
+            logToConsole(`❌ Erreur: ${error}`, 'error');
+        });
+}
+
+// 2. Test du MRO
+function testMRO() {
+    logToConsole('🧪 Début du test du MRO...', 'info');
+    
+    fetch('/api/test-mro')
+        .then(response => response.json())
+        .then(data => {
+            let mroHtml = '';
+            data.mro.forEach((cls, index) => {
+                mroHtml += `<div class="mro-item"><span class="mro-index">${index}.</span> ${cls}</div>`;
+            });
+            document.getElementById('mro-display').innerHTML = mroHtml;
+            showResult('mro-result', `MRO avec ${data.mro.length} classes`);
+            logToConsole('✅ MRO affiché avec succès!', 'success');
+        })
+        .catch(error => {
+            logToConsole(`❌ Erreur: ${error}`, 'error');
+        });
+}
+
+// 3. Test des Décorateurs
+function testDecorators() {
+    logToConsole('🧪 Début du test des Décorateurs...', 'info');
+    
+    // Simulation (dans un vrai projet, appeler une API)
+    setTimeout(() => {
+        const result = `
+[LOG] Appel de send_notification
+[PRIORITY] Niveau: HIGH
+📨 Notification envoyée: "Test décorateur"
+[LOG] Résultat: Succès
+        `;
+        showResult('decorators-result', result);
+        logToConsole('✅ Décorateurs testés avec succès!', 'success');
+    }, 500);
+}
+
+// 4. Test des Descripteurs
+function testDescriptors() {
+    logToConsole('🧪 Début du test des Descripteurs...', 'info');
+    
+    fetch('/api/test-descriptors')
+        .then(response => response.json())
+        .then(data => {
+            let result = '✅ Tests de validation:\n\n';
+            data.tests.forEach(test => {
+                result += `${test.passed ? '✓' : '✗'} ${test.description}\n`;
+            });
+            showResult('descriptors-result', result);
+            logToConsole('✅ Descripteurs testés avec succès!', 'success');
+        })
+        .catch(error => {
+            logToConsole(`❌ Erreur: ${error}`, 'error');
+        });
+}
+
+// 5. Test de la Métaclasse
+function testMetaclass() {
+    logToConsole('🧪 Début du test de la Métaclasse...', 'info');
+    
+    fetch('/api/test-metaclass')
+        .then(response => response.json())
+        .then(data => {
+            let result = '📋 Classes enregistrées automatiquement:\n\n';
+            data.registered_classes.forEach(cls => {
+                result += `• ${cls}\n`;
+            });
+            showResult('metaclass-result', result);
+            logToConsole('✅ Métaclasse testée avec succès!', 'success');
+        })
+        .catch(error => {
+            logToConsole(`❌ Erreur: ${error}`, 'error');
+        });
+}
+
+// 6. Test complet
+function testComplete() {
+    logToConsole('🚀 Lancement du test complet...', 'system');
+    
+    // Simulation d'un test complet
+    const steps = [
+        '1. Création d\'une alerte de sécurité',
+        '2. Validation de la priorité (URGENT)',
+        '3. Application des décorateurs',
+        '4. Envoi via les 3 mixins',
+        '5. Sauvegarde en base de données',
+        '6. Retour de confirmation'
+    ];
+    
+    let progress = '';
+    let stepIndex = 0;
+    
+    const interval = setInterval(() => {
+        if (stepIndex < steps.length) {
+            progress += `[${new Date().toLocaleTimeString()}] ${steps[stepIndex]}\n`;
+            showResult('complete-result', progress);
+            logToConsole(steps[stepIndex], 'info');
+            stepIndex++;
+        } else {
+            clearInterval(interval);
+            progress += '\n✅ TEST COMPLET RÉUSSI !';
+            showResult('complete-result', progress);
+            logToConsole('🎉 Test complet terminé avec succès!', 'success');
+        }
+    }, 800);
+}
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    logToConsole('🖥️ Page de démo POO chargée', 'system');
+    logToConsole('Cliquez sur les boutons "Tester" pour voir les concepts en action', 'info');
+    
+    // Charger le MRO automatiquement
+    testMRO();
+});
+</script>
+{% endblock %}

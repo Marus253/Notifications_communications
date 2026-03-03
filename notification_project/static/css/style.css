@@ -1,0 +1,343 @@
+/* ===== VARIABLES CSS ===== */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+    --transition: all 0.3s ease;
+}
+
+/* ===== RÉINITIALISATION ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== NAVIGATION ===== */
+.navbar-custom {
+    background-color: var(--primary-color) !important;
+    box-shadow: var(--shadow);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.navbar-brand i {
+    color: var(--warning-color);
+    margin-right: 10px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 5px;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: white !important;
+}
+
+/* ===== CARTES ===== */
+.card-custom {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    margin-bottom: 1.5rem;
+    background: white;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+    padding: 1.25rem;
+    font-weight: 600;
+    border: none;
+}
+
+/* ===== BOUTONS ===== */
+.btn-custom {
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+}
+
+.btn-primary-custom:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-success-custom {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: white;
+}
+
+.btn-danger-custom {
+    background: linear-gradient(135deg, var(--danger-color), #c0392b);
+    color: white;
+}
+
+/* ===== BADGES ===== */
+.badge-custom {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge-security {
+    background-color: #ffeaea;
+    color: var(--danger-color);
+    border: 1px solid #ffcccc;
+}
+
+.badge-weather {
+    background-color: #fff8e1;
+    color: var(--warning-color);
+    border: 1px solid #ffeaa7;
+}
+
+.badge-health {
+    background-color: #e3f2fd;
+    color: var(--secondary-color);
+    border: 1px solid #bbdefb;
+}
+
+.badge-academic {
+    background-color: #e8f5e9;
+    color: var(--success-color);
+    border: 1px solid #c8e6c9;
+}
+
+/* ===== LISTE DES NOTIFICATIONS ===== */
+.notification-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 5px solid;
+    background-color: white;
+    transition: var(--transition);
+    animation: fadeIn 0.5s ease;
+}
+
+.notification-item:hover {
+    transform: translateX(5px);
+}
+
+.notification-security {
+    border-left-color: var(--danger-color);
+    background: linear-gradient(to right, #ffeaea, white);
+}
+
+.notification-weather {
+    border-left-color: var(--warning-color);
+    background: linear-gradient(to right, #fff8e1, white);
+}
+
+.notification-health {
+    border-left-color: var(--secondary-color);
+    background: linear-gradient(to right, #e3f2fd, white);
+}
+
+.notification-academic {
+    border-left-color: var(--success-color);
+    background: linear-gradient(to right, #e8f5e9, white);
+}
+
+/* ===== FORMULAIRES ===== */
+.form-custom {
+    background-color: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.form-control-custom {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: var(--transition);
+}
+
+.form-control-custom:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* ===== ALERTES ===== */
+.alert-custom {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.5s ease;
+}
+
+/* ===== STATISTIQUES ===== */
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    color: white;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-total {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.stat-security {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.stat-weather {
+    background: linear-gradient(135deg, #f6d365, #fda085);
+}
+
+.stat-health {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.stat-academic {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* ===== FOOTER ===== */
+.footer-custom {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+.footer-custom a {
+    color: var(--warning-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-custom a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .card-custom {
+        margin-bottom: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+}
